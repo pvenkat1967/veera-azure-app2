@@ -84,7 +84,4 @@ stages:
               namespace: 'tempo'
               manifests: 
                 $(Pipeline.Workspace)/manifests/01-Deployment-and-LoadBalancer-Service.yml
-              imagePullSecrets: |
-                $(imagePullSecret)
-              containers: |
-                $(containerRegistry)/$(imageRepository):$(tag)
+              
