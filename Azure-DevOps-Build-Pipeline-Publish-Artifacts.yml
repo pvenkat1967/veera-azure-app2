@@ -64,7 +64,7 @@ stages:
     displayName: Deploy job
     pool:
       vmImage: $(vmImageName)
-    environment: 'pvenkat1967veeraazureapp2.default'
+    environment: 'pvenkat1967veeraazureapp1.default'
     strategy:
       runOnce:
         deploy:
