@@ -77,3 +77,14 @@ stages:
               action: createSecret
               secretName: $(imagePullSecret)
               dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
+          - task: KubernetesManifest@0
+            inputs:
+              action: 'deploy'
+              kubernetesServiceConnection: 'aksdemo-app2-tempo-svc'
+              namespace: 'tempo'
+              manifests: 
+                $(Pipeline.Workspace)/manifests/01-Deployment-and-LoadBalancer-Service.yml
+              imagePullSecrets: |
+                $(imagePullSecret)
+              containers: |
+                $(containerRegistry)/$(imageRepository):$(tag)
