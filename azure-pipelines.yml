@@ -56,17 +56,24 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'kube-manifests'
         publishLocation: 'Container'
-    - task: KubernetesManifest@0
-      inputs:
-        action: 'createSecret'
-        kubernetesServiceConnection: 'aksdemo-app2-tempo-svc'
-        namespace: 'tempo'
-        secretType: 'dockerRegistry'
-        secretName: 'aksdemo-app2-tempo-secret'
-        dockerRegistryEndpoint: 'azureaksdemo-7850'
-    - task: KubernetesManifest@0
-      inputs:
-        action: 'deploy'
-        kubernetesServiceConnection: 'aksdemo-app2-tempo-svc'
-        namespace: 'tempo'
-        manifests: 'kube-manifests'
+
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy
+    pool:
+      vmImage: $(vmImageName)
+    environment: 'pvenkat1967veeraazureapp2.tempo'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: KubernetesManifest@0
+            displayName: Create imagePullSecret
+            inputs:
+              action: createSecret
+              secretName: $(imagePullSecret)
+              dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
